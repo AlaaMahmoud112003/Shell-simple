@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * my_cd - function that changes the working current shell executon 
+ * my_cd - function that changes the working current shell executon
  * @arcgs: arcgs
  * Return: -1 .
  */
@@ -9,16 +9,16 @@ int my_cd(char **arcgs)
 {
 	if (arcgs[1] == NULL)
 	{
-		fprintf(stderr, " the expected arguments to \"cd\"\n");
+		perror("Error");
 	}
 	else
 	{
 		if (chdir(arcgs[1]) != 0)
 		{
-			perror("error in my_cd.c: changing the dir\n");
+			perror("Error in cd: changing the dir\n");
 		}
 	}
-	return (0);
+	return (1);
 }
 
 /**
@@ -33,11 +33,11 @@ int my_env(char **arcgs)
 
 	while (environ[g])
 	{
-		write(STDOUT_FILENO, environ[g], strlen(environ[g]));
+		write(STDOUT_FILENO, environ[g], _strlen(environ[g]));
 		write(STDOUT_FILENO, "\n", 1);
 		g++;
 	}
-	return (0);
+	return (1);
 }
 
 /**
@@ -49,6 +49,15 @@ int my_exit(char **arcgs)
 {
 	if (arcgs[1])
 	{
+		if (atoi(arcgs[1]) < 0 || (*arcgs[1] < 48 || *arcgs[1] > 57))
+		{
+			write(STDERR_FILENO, "./hsh: 1: ", _strlen("./hsh: 1: "));
+			write(STDERR_FILENO, "exit: ", _strlen("exit: "));
+			write(STDERR_FILENO, "Illegal number: ", _strlen("Illegal number: "));
+			write(STDERR_FILENO, arcgs[1], _strlen(arcgs[1]));
+			write(STDERR_FILENO, "\n", 1);
+			return (-2);
+		}
 		return (atoi(arcgs[1]));
 	}
 

@@ -1,22 +1,25 @@
 #include "main.h"
-/*
-*
+/**
+* env_path - build a path for the command
+* @av : double pointer to arguments
+* @aa :  non-interactive double pointer to the arguments
+* Return: int number of the status
 */
-int env_path(char **av)
+int env_path(char **av, char **aa)
 {
 	char *path = getenv("PATH");
 	pid_t i;
+	int l, status;
 	char *cmd = NULL;
 
 	if (!av)
-	{
-		return(0);
-	}
+		return (EXIT_FAILURE);
 	cmd = location(path, av);
 	if (!cmd)
 	{
-        perror("Error");
-		return (2);
+		free(cmd);
+		error_msg(aa, av);
+		return (127);
 	}
 	else
 	{
@@ -25,22 +28,22 @@ int env_path(char **av)
 		{
 			free(cmd);
 			perror("Error");
-			return (-1);
+			return (-2);
 		}
 		if (i == 0)
 		{
 			if (execve(cmd, av, environ) == -1)
-			{
-				free(cmd);
-				perror("error");
-				return (-1);
-			}
+				status = EXIT_FAILURE;
+			exit(status);
 		}
 		else
-		wait(NULL);
-		free(cmd);
-        return (0);
+		{
+			waitpid(i, &l, WUNTRACED);
+			free(cmd);
+			if (WIFEXITED(l))
+				return (WEXITSTATUS(l));
+			return (EXIT_FAILURE);
+		}
 	}
-	return (0);
+	return (EXIT_FAILURE);
 }
-

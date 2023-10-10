@@ -1,35 +1,33 @@
 #include "main.h"
-/*
-*
+/**
+* bu_path - checks if the command built-in
+* @av : double pointer to arguments
+* @aa : non-interactive double pointer to the arguments
+* Return: int number of the status
 */
-int bu_path(char **av)
+int bu_path(char **av, char **aa)
 {
 	int i;
 	char *builtin[4] = {"cd", "env", "exit", NULL};
-	int (*builtinexe[])(char **) =
-	{
+
+	int (*builtinexe[])(char **) = {
 		&my_cd,
 		&my_env,
 		&my_exit,
 		NULL
 	};
-	if (av[0] == NULL)
+	if (!av || av[0] == NULL)
 	{
-		return (1);
+		return (-1);
 	}
 	i = 0;
-	if (av == NULL)
-	{
-		return (1);
-	}
 	while (builtin[i] != NULL)
 	{
-		if (strcmp(builtin[i], av[0]) == 0)
+		if (_strcmp(builtin[i], av[0]) == 0)
 		{
 			return ((*builtinexe[i])(av));
 		}
 		i++;
 	}
-	return (1);
+	return (env_path(av, aa));
 }
-
