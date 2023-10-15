@@ -4,7 +4,7 @@
 * @cmd : pointer to a string
 * Return: int number of the status
 */
-int _strlen(char *cmd)
+int _strlen(const char *cmd)
 {
 	int i = 0;
 

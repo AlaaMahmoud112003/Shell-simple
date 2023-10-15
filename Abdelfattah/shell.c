@@ -29,7 +29,7 @@ int main(int ac, char **av)
 		{
 			pars_cmd(cmd, r, &aa);
 			m = bu_path(aa, av);
-			if (_strcmp(aa[0], "exit") == 0)
+			if (_strcmp(aa[0], "exit") == 0 && is_char(aa[1]) == 0)
 			{
 				free_list(&aa), free(cmd), exit(m);
 			}
@@ -39,7 +39,7 @@ int main(int ac, char **av)
 		{
 			pars_cmd(cmd, r, &aa);
 			m = bu_path(aa, av);
-			if (m >= 2)
+			if (aa == NULL || m >= 2)
 			{
 				free_list(&aa), free(cmd), exit(m);
 			}
